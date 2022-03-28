@@ -5,6 +5,14 @@ name = "pypi"
 
 [packages]
 django = "*"
+djangorestframework = "*"
+drf-spectacular = "*"
+django-cors-headers = "*"
+python-decouple = "*"
+djangorestframework-simplejwt = "*"
+django-allauth = "*"
+dj-rest-auth = "*"
+pyjwt = "*"
 
 [dev-packages]
 
