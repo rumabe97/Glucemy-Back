@@ -1,4 +1,4 @@
-from rest_framework import viewsets, mixins, permissions
+from rest_framework import mixins, permissions
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -30,7 +30,7 @@ class UserViewSet(mixins.ListModelMixin,
         'create': CreateUserSerializer,
         'partial_update': UpdateUserSerializer,
         'get_current_user': FullUserSerializer,
-        'get_user_by_username': FullUserSerializer,
+        'get_user_by_id': FullUserSerializer,
     }
 
     permission_classes = (permissions.AllowAny,)
