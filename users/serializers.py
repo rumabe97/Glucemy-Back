@@ -10,6 +10,9 @@ class UserSerializer(serializers.ModelSerializer):
                   'first_name',
                   'last_name',
                   'email',
+                  'weight',
+                  'height',
+                  'age',
                   'created_date')
 
 
@@ -18,7 +21,11 @@ class UpdateUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id',
                   'first_name',
-                  'last_name')
+                  'last_name',
+                  'email',
+                  'weight',
+                  'height',
+                  'age',)
 
 
 class FullUserSerializer(serializers.ModelSerializer):
@@ -27,6 +34,9 @@ class FullUserSerializer(serializers.ModelSerializer):
         fields = ('id',
                   'username',
                   'email',
+                  'weight',
+                  'height',
+                  'age',
                   'first_name',
                   'last_name',
                   'created_date')
@@ -39,4 +49,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
                   'email',
                   'first_name',
                   'last_name',
+                  'weight',
+                  'height',
+                  'age',
                   'created_date')
