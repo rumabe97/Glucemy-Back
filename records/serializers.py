@@ -23,7 +23,7 @@ class RecordSerializer(serializers.ModelSerializer):
                   'user',
                   'foods',
                   'phasesDay',
-                  'date',)
+                  'created_date',)
 
 
 class UpdateRecordSerializer(serializers.ModelSerializer):
@@ -33,7 +33,7 @@ class UpdateRecordSerializer(serializers.ModelSerializer):
                   'blood_glucose',
                   'carbohydrates',
                   'annotations',
-                  'date',)
+                  'created_date',)
 
 
 class FullRecordSerializer(serializers.ModelSerializer):
@@ -46,7 +46,7 @@ class FullRecordSerializer(serializers.ModelSerializer):
                   'carbohydrates',
                   'annotations',
                   'foods',
-                  'date',)
+                  'created_date',)
 
 
 class CreateRecordSerializer(serializers.ModelSerializer):
@@ -55,6 +55,7 @@ class CreateRecordSerializer(serializers.ModelSerializer):
     idPhaseDay = serializers.PrimaryKeyRelatedField(queryset=PhasesDay.objects.all(), write_only=True)
     user = UserSerializer(read_only=True)
     foods = FoodsSerializer(many=True, read_only=True)
+    phasesDay = PhasesDaySerializer(read_only=True)
 
     class Meta:
         model = Records
@@ -66,7 +67,8 @@ class CreateRecordSerializer(serializers.ModelSerializer):
                   'idPhaseDay',
                   'foods',
                   'user',
-                  'date')
+                  'phasesDay',
+                  'created_date')
 
     def create(self, validated_data):
         user = validated_data.pop('idUser')
