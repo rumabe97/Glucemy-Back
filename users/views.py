@@ -1,9 +1,9 @@
-from rest_framework import mixins, permissions
+from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
-from rest_framework.viewsets import GenericViewSet
 
+from shared.mixins import DynamicSerializersMixin
 from .serializers import UserSerializer, UpdateUserSerializer, FullUserSerializer, CreateUserSerializer
 from .models import User
 from drf_spectacular.utils import extend_schema, extend_schema_view
@@ -16,11 +16,7 @@ from drf_spectacular.utils import extend_schema, extend_schema_view
     destroy=extend_schema(description='Delete a user.'),
     create=extend_schema(description='Create a new user.'),
 )
-class UserViewSet(mixins.ListModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin,
-                  mixins.CreateModelMixin,
-                  GenericViewSet):
+class UserViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
@@ -34,11 +30,11 @@ class UserViewSet(mixins.ListModelMixin,
 
     permission_classes = (permissions.AllowAny,)
 
-    @action(methods=["get"], detail=False, url_path='(?P<username>[^/.]+)', url_name="user")
-    def get_user_by_username(self, request, username):
-        user = get_object_or_404(User, username=username)
-        serializer = self.get_serializer(user)
-        return Response(serializer.data)
+    # @action(methods=["get"], detail=False, url_path='(?P<username>[^/.]+)', url_name="user")
+    # def get_user_by_username(self, request, username):
+    #     user = get_object_or_404(User, username=username)
+    #     serializer = self.get_serializer(user)
+    #     return Response(serializer.data)
 
     @action(methods=["get"], detail=False, url_path='me', url_name="me")
     def get_current_user(self, request):

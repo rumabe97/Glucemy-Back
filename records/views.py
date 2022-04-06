@@ -1,7 +1,7 @@
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework import viewsets, permissions
 
-from config.mixins import DynamicSerializersMixin
+from shared.mixins import DynamicSerializersMixin
 from records.models import Records
 from records.serializers import RecordSerializer, UpdateRecordSerializer, CreateRecordSerializer
 
