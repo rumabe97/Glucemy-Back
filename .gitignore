@@ -23,6 +23,7 @@ env.bak/
 venv.bak/
 
 __pycache__/
+*.pyc
 
 *.todo
 *.txt
