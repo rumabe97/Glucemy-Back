@@ -1,16 +1,17 @@
 from rest_framework import serializers
 
+from users.models import User
 from .models import Records
 
 
 class RecordSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Records
         fields = ('id',
                   'blood_glucose',
                   'carbohydrates',
                   'annotations',
+                  'user',
                   'date',)
 
 
@@ -35,7 +36,7 @@ class FullRecordSerializer(serializers.ModelSerializer):
 
 
 class CreateRecordSerializer(serializers.ModelSerializer):
-    idUser = serializers.PrimaryKeyRelatedField(many=False, read_only=True)
+    idUser = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
 
     class Meta:
         model = Records
@@ -43,4 +44,15 @@ class CreateRecordSerializer(serializers.ModelSerializer):
                   'carbohydrates',
                   'annotations',
                   'idUser',
-                  'date',)
+                  'date',
+                  'user')
+
+    def create(self, validated_data):
+        user = validated_data.pop('idUser')
+        current_user = user if user is not None else self.context.get('request').user
+
+        instance = Records.objects.create(
+            user=current_user,
+            **validated_data)
+
+        return instance

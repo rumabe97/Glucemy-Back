@@ -1,6 +1,7 @@
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework import viewsets, permissions
 
+from config.mixins import DynamicSerializersMixin
 from records.models import Records
 from records.serializers import RecordSerializer, UpdateRecordSerializer, CreateRecordSerializer
 
@@ -12,10 +13,9 @@ from records.serializers import RecordSerializer, UpdateRecordSerializer, Create
     destroy=extend_schema(description='Delete a record.'),
     create=extend_schema(description='Create a new record.'),
 )
-class RecordViewSet(viewsets.ModelViewSet):
+class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
     queryset = Records.objects.all()
     serializer_class = RecordSerializer
-    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
 
     serializer_classes_by_action = {
         'update': UpdateRecordSerializer,
@@ -24,6 +24,3 @@ class RecordViewSet(viewsets.ModelViewSet):
     }
 
     permission_classes = (permissions.AllowAny,)
-
-    def _allowed_methods(self):
-        return [m.upper() for m in self.http_method_names if hasattr(self, m)]

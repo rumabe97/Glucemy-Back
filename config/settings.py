@@ -53,7 +53,8 @@ INSTALLED_APPS = [
     'dj_rest_auth.registration',
     #app
     'users',
-    'records'
+    'records',
+    'shared',
 ]
 
 MIDDLEWARE = [
