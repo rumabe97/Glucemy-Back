@@ -55,7 +55,8 @@ INSTALLED_APPS = [
     'users',
     'records',
     'shared',
-    'foods'
+    'foods',
+    'phasesDay'
 ]
 
 MIDDLEWARE = [

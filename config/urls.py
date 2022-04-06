@@ -14,4 +14,5 @@ urlpatterns = [
                   path('api/users/', include('users.urls')),
                   path('api/records/', include('records.urls')),
                   path('api/foods/', include('foods.urls')),
+                  path('api/phases_day/', include('phasesDay.urls')),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
