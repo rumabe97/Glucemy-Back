@@ -1,4 +1,4 @@
-from rest_framework import viewsets, mixins, permissions
+from rest_framework import mixins, permissions
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
@@ -23,22 +23,18 @@ class UserViewSet(mixins.ListModelMixin,
                   GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    http_method_names = ['get', 'post', 'put', 'patch', 'delete']
 
     serializer_classes_by_action = {
         'update': UpdateUserSerializer,
         'create': CreateUserSerializer,
         'partial_update': UpdateUserSerializer,
         'get_current_user': FullUserSerializer,
-        'get_user_by_username': FullUserSerializer,
+        'get_user_by_id': FullUserSerializer,
     }
 
     permission_classes = (permissions.AllowAny,)
 
-    def _allowed_methods(self):
-        return [m.upper() for m in self.http_method_names if hasattr(self, m)]
-
-    @action(methods=["get"], detail=True, url_path='(?P<username>[^/.]+)', url_name="user")
+    @action(methods=["get"], detail=False, url_path='(?P<username>[^/.]+)', url_name="user")
     def get_user_by_username(self, request, username):
         user = get_object_or_404(User, username=username)
         serializer = self.get_serializer(user)

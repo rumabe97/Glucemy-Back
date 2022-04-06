@@ -1,8 +1,11 @@
 from rest_framework import serializers
+
+from records.serializers import RecordSerializer
 from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = User
         fields = ('id',
@@ -13,7 +16,7 @@ class UserSerializer(serializers.ModelSerializer):
                   'weight',
                   'height',
                   'age',
-                  'created_date')
+                  'created_date',)
 
 
 class UpdateUserSerializer(serializers.ModelSerializer):
@@ -29,6 +32,8 @@ class UpdateUserSerializer(serializers.ModelSerializer):
 
 
 class FullUserSerializer(serializers.ModelSerializer):
+    records = RecordSerializer(many=True)
+
     class Meta:
         model = User
         fields = ('id',
@@ -39,7 +44,8 @@ class FullUserSerializer(serializers.ModelSerializer):
                   'age',
                   'first_name',
                   'last_name',
-                  'created_date')
+                  'created_date',
+                  'records')
 
 
 class CreateUserSerializer(serializers.ModelSerializer):
