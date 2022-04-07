@@ -56,7 +56,8 @@ INSTALLED_APPS = [
     'records',
     'shared',
     'foods',
-    'phasesDay'
+    'phasesDay',
+    'favourites',
 ]
 
 MIDDLEWARE = [
