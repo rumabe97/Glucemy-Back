@@ -15,4 +15,5 @@ urlpatterns = [
                   path('api/records/', include('records.urls')),
                   path('api/foods/', include('foods.urls')),
                   path('api/phases_day/', include('phasesDay.urls')),
+                  path('api/favourites/', include('favourites.urls')),
               ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
