@@ -13,6 +13,10 @@ djangorestframework-simplejwt = "*"
 django-allauth = "*"
 dj-rest-auth = "*"
 pyjwt = "*"
+gunicorn = "*"
+psycopg2 = "*"
+dj-database-url = "*"
+whitenoise = "*"
 
 [dev-packages]
 
