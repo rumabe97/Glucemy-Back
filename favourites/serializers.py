@@ -27,11 +27,36 @@ class FavouritesSerializer(serializers.ModelSerializer):
 
 
 class UpdateFavouriteSerializer(serializers.ModelSerializer):
+    idUser = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
+    idFoods = serializers.PrimaryKeyRelatedField(queryset=Foods.objects.all(), many=True, write_only=True)
+    idPhasesDay = serializers.PrimaryKeyRelatedField(queryset=PhasesDay.objects.all(), many=True, write_only=True)
+    foods = FoodsSerializer(read_only=True, many=True)
+    phasesDay = PhasesDaySerializer(read_only=True, many=True)
+
     class Meta:
         model = Favourites
         fields = ('id',
                   'name',
-                  'description',)
+                  'description',
+                  'created_at',
+                  'updated_at',
+                  'user',
+                  'foods',
+                  'phasesDay',
+                  'idUser',
+                  'idFoods',
+                  'idPhasesDay',)
+
+    def update(self, instance, validated_data):
+        foods = validated_data.pop('idFoods')
+        phases_day = validated_data.pop('idPhasesDay')
+
+        instance = Favourites.objects.create(
+            **validated_data)
+
+        instance.foods.set(foods)
+        instance.phasesDay.set(phases_day)
+        return instance
 
 
 class CreateFavouriteSerializer(serializers.ModelSerializer):

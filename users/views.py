@@ -1,10 +1,10 @@
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
-from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from shared.mixins import DynamicSerializersMixin
-from .serializers import UserSerializer, UpdateUserSerializer, FullUserSerializer, CreateUserSerializer
+from .fullSerializers import FullUserSerializer
+from .serializers import UserSerializer, UpdateUserSerializer, CreateUserSerializer
 from .models import User
 from drf_spectacular.utils import extend_schema, extend_schema_view
 
