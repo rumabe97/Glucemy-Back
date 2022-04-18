@@ -1,9 +1,10 @@
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from rest_framework import viewsets, permissions
 
+from records.fullSerializers import UpdateRecordSerializer, CreateRecordSerializer, FullRecordSerializer
 from shared.mixins import DynamicSerializersMixin
 from records.models import Records
-from records.serializers import RecordSerializer, UpdateRecordSerializer, CreateRecordSerializer
+from records.serializers import RecordSerializer
 
 
 @extend_schema_view(
@@ -21,6 +22,7 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
         'update': UpdateRecordSerializer,
         'create': CreateRecordSerializer,
         'partial_update': UpdateRecordSerializer,
+        'get_object': FullRecordSerializer,
     }
 
     permission_classes = (permissions.AllowAny,)
