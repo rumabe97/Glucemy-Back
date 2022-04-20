@@ -14,6 +14,7 @@ urlpatterns = [
                   path('api/users/', include('users.urls')),
                   path('api/records/', include('records.urls')),
                   path('api/auth/', include('authentication.urls')),
+                  path(r"^accounts", include("allauth.urls")),
                   path('api/foods/', include('foods.urls')),
                   path('api/phases_day/', include('phasesDay.urls')),
                   path('api/favourites/', include('favourites.urls')),
