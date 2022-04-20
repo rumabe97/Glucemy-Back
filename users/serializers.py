@@ -4,7 +4,6 @@ from .models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = User
         fields = ('id',
@@ -28,16 +27,3 @@ class UpdateUserSerializer(serializers.ModelSerializer):
                   'weight',
                   'height',
                   'age',)
-
-
-class CreateUserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('username',
-                  'email',
-                  'first_name',
-                  'last_name',
-                  'weight',
-                  'height',
-                  'age',
-                  'created_date')

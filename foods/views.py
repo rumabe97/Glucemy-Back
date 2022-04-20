@@ -2,7 +2,7 @@ from foods.models import Foods
 from rest_framework import viewsets, permissions
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from foods.serializers import FoodsSerializer, UpdateFoodSerializer, CreateFoodSerializer
-from shared.mixins import DynamicSerializersMixin
+from shared.mixins import DynamicSerializersMixin, DynamicPermissionsMixin
 
 
 @extend_schema_view(
@@ -12,7 +12,7 @@ from shared.mixins import DynamicSerializersMixin
     destroy=extend_schema(description='Delete a food.'),
     create=extend_schema(description='Create a new food.'),
 )
-class FoodsViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
+class FoodsViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.ModelViewSet):
     queryset = Foods.objects.all()
     serializer_class = FoodsSerializer
 
@@ -22,4 +22,9 @@ class FoodsViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
         'partial_update': UpdateFoodSerializer,
     }
 
-    permission_classes = (permissions.AllowAny,)
+    permission_classes_by_action = {
+        'create': (permissions.IsAdminUser,),
+        'update': (permissions.IsAdminUser,),
+        'partial_update': (permissions.IsAdminUser,),
+        'destroy': (permissions.IsAdminUser,),
+    }

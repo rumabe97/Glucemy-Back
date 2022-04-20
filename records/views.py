@@ -5,6 +5,7 @@ from records.fullSerializers import UpdateRecordSerializer, CreateRecordSerializ
 from shared.mixins import DynamicSerializersMixin
 from records.models import Records
 from records.serializers import RecordSerializer
+from shared.permissions import IsOwner
 
 
 @extend_schema_view(
@@ -25,4 +26,9 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
         'get_object': FullRecordSerializer,
     }
 
-    permission_classes = (permissions.AllowAny,)
+    permission_classes_by_action = {
+        'create': (permissions.IsAuthenticated,),
+        'update': (permissions.IsAdminUser | IsOwner,),
+        'partial_update': (permissions.IsAdminUser | IsOwner,),
+        'destroy': (permissions.IsAdminUser | IsOwner,),
+    }

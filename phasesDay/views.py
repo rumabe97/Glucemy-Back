@@ -4,6 +4,7 @@ from rest_framework import viewsets, permissions
 from phasesDay.models import PhasesDay
 from phasesDay.serializers import PhasesDaySerializer, UpdatePhasesDaySerializer, CreatePhasesDaySerializer
 from shared.mixins import DynamicSerializersMixin
+from shared.permissions import IsOwner
 
 
 @extend_schema_view(
@@ -23,4 +24,9 @@ class PhasesDayViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
         'partial_update': UpdatePhasesDaySerializer,
     }
 
-    permission_classes = (permissions.AllowAny,)
+    permission_classes_by_action = {
+        'create': (permissions.IsAuthenticated,),
+        'update': (permissions.IsAdminUser | IsOwner,),
+        'partial_update': (permissions.IsAdminUser | IsOwner,),
+        'destroy': (permissions.IsAdminUser | IsOwner,),
+    }
