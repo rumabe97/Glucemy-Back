@@ -5,6 +5,7 @@ from .serializers import RegisterSerializer
 from rest_framework import generics
 
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.microsoft.views import MicrosoftGraphOAuth2Adapter
 from allauth.socialaccount.providers.oauth2.client import OAuth2Client
 
 from django.contrib.auth import get_user_model
@@ -27,4 +28,12 @@ class GoogleLogin(SocialLoginView):
     """
 
     adapter_class = GoogleOAuth2Adapter
+    client_class = OAuth2Client
+
+
+class OutlookLogin(SocialLoginView):
+    """
+        Exchanges Microsoft's access code for an access_token.
+    """
+    adapter_class = MicrosoftGraphOAuth2Adapter
     client_class = OAuth2Client

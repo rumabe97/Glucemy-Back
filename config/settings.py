@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.microsoft",
     "dj_rest_auth",
     'dj_rest_auth.registration',
     # app
@@ -76,6 +77,9 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {
             'access_type': 'online',
         }
+    },
+    'microsoft': {
+        'TENANT': '{tenant}',
     }
 }
 
