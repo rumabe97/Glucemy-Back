@@ -1,5 +1,5 @@
 from foods.models import Foods
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, filters
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from foods.serializers import FoodsSerializer, UpdateFoodSerializer, CreateFoodSerializer
 from shared.mixins import DynamicSerializersMixin, DynamicPermissionsMixin
@@ -15,6 +15,8 @@ from shared.mixins import DynamicSerializersMixin, DynamicPermissionsMixin
 class FoodsViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.ModelViewSet):
     queryset = Foods.objects.all()
     serializer_class = FoodsSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
     serializer_classes_by_action = {
         'update': UpdateFoodSerializer,
