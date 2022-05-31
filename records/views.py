@@ -43,17 +43,21 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
             url_name="charts")
     def charts(self, arg, start_date, end_date):
         labels = []
-        data = []
+        blood_glucose_data = []
+        carbohydrates_data = []
+
         queryset = Records.objects.annotate(day=TruncDay('created_date')).values('day').annotate(
-            total=Sum('blood_glucose')).order_by('day').filter(created_date__range=[start_date, end_date])
+            totalBlood=Sum('blood_glucose'), totalCarbohydrates=Sum('carbohydrates')).order_by('day').filter(
+            created_date__range=[start_date, end_date])
 
         for record in queryset:
-            print(record)
             labels.append(record['day'].strftime("%d/%m/%Y"))
-            data.append(record['total'])
+            blood_glucose_data.append(record['totalBlood']),
+            carbohydrates_data.append(record['totalCarbohydrates'])
 
         return JsonResponse(data={
-            'data': data,
+            'blood_glucose_data': blood_glucose_data,
+            'carbohydrates_data': carbohydrates_data,
             'labels': labels,
         })
 
