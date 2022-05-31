@@ -17,7 +17,7 @@ gunicorn = "*"
 psycopg2 = "*"
 dj-database-url = "*"
 whitenoise = "*"
-
+FPDF = "*"
 [dev-packages]
 
 [requires]
