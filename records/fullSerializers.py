@@ -10,9 +10,9 @@ from users.serializers import UserSerializer
 
 
 class FullRecordSerializer(serializers.ModelSerializer):
-    foods = FoodsSerializer(many=True)
-    phasesDay = PhasesDaySerializer()
-    user = UserSerializer()
+    foods = FoodsSerializer(many=True, read_only=True)
+    phasesDay = PhasesDaySerializer(read_only=True)
+    user = UserSerializer(read_only=True)
 
     class Meta:
         model = Records
@@ -20,7 +20,11 @@ class FullRecordSerializer(serializers.ModelSerializer):
                   'blood_glucose',
                   'carbohydrates',
                   'annotations',
+                  'hc_rations',
+                  'bolus',
                   'foods',
+                  'phasesDay',
+                  'user',
                   'created_date',)
 
 
@@ -37,6 +41,8 @@ class UpdateRecordSerializer(serializers.ModelSerializer):
                   'blood_glucose',
                   'carbohydrates',
                   'annotations',
+                  'hc_rations',
+                  'bolus',
                   'idFoods',
                   'idPhaseDay',
                   'foods',
@@ -69,6 +75,8 @@ class CreateRecordSerializer(serializers.ModelSerializer):
         fields = ('blood_glucose',
                   'carbohydrates',
                   'annotations',
+                  'hc_rations',
+                  'bolus',
                   'idUser',
                   'idFoods',
                   'idPhaseDay',

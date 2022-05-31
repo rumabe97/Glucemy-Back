@@ -17,4 +17,6 @@ class RecordSerializer(serializers.ModelSerializer):
                   'blood_glucose',
                   'carbohydrates',
                   'annotations',
+                  'hc_rations',
+                  'bolus',
                   'created_date',)
