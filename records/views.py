@@ -48,7 +48,7 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
 
         queryset = Records.objects.annotate(day=TruncDay('created_date')).values('day').annotate(
             totalBlood=Sum('blood_glucose'), totalCarbohydrates=Sum('carbohydrates')).order_by('day').filter(
-            created_date__range=[start_date, end_date])
+            created_date__range=[start_date, end_date], user=arg.user)
 
         for record in queryset:
             labels.append(record['day'].strftime("%d/%m/%Y"))
@@ -64,7 +64,7 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
     @action(methods=["get"], detail=False, url_path='report', url_name="report")
     def report(self, arg):
         data = []
-        queryset = Records.objects.all()
+        queryset = Records.objects.all().filter(user=arg.user)
         for record in queryset:
             data.append(record)
 
