@@ -12,6 +12,7 @@ class Records(models.Model):
     annotations = models.TextField(default="", max_length=255)
     hc_rations = models.FloatField(default=0)
     bolus = models.FloatField(default=0)
+    units = models.FloatField(default=0)
     created_date = models.DateTimeField(auto_now_add=True)
     foods = models.ManyToManyField(Foods, related_name="records", related_query_name='record')
     phasesDay = models.ForeignKey(PhasesDay, on_delete=CASCADE, related_name="records", related_query_name='record',

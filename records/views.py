@@ -39,17 +39,18 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
         'destroy': (permissions.IsAdminUser | IsOwner,),
         'charts': (permissions.IsAdminUser | IsOwner,),
         'records_day': (permissions.IsAdminUser | IsOwner,),
+        'report': (permissions.IsAuthenticated,)
     }
 
-    @action(methods=['get'], detail=False, url_path='(?P<day>[^/.]+)', url_name="record_day")
-    def records_day(self, request, day):
-        print(day)
-        start_date = strptime(day, "%Y/%m/%d")
-        print(start_date)
-        end_date = start_date + timedelta(days=1)
-        records = Records.objects.filter(created_date__range=[start_date, end_date], user=request.user)
-        serializer = self.get_serializer(records, many=True)
-        return JsonResponse(serializer.data, safe=False)
+    # @action(methods=['get'], detail=False, url_path='(?P<day>[^/.]+)', url_name="record_day")
+    # def records_day(self, request, day):
+    #     print(day)
+    #     start_date = strptime(day, "%Y/%m/%d")
+    #     print(start_date)
+    #     end_date = start_date + timedelta(days=1)
+    #     records = Records.objects.filter(created_date__range=[start_date, end_date], user=request.user)
+    #     serializer = self.get_serializer(records, many=True)
+    #     return JsonResponse(serializer.data, safe=False)
 
     @action(methods=["get"], detail=False, url_path='(?P<start_date>[^/.]+)/(?P<end_date>[^/.]+)',
             url_name="charts")
@@ -76,33 +77,46 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
     @action(methods=["get"], detail=False, url_path='report', url_name="report")
     def report(self, arg):
         data = []
-        queryset = Records.objects.all().filter(user=arg.user)
-        for record in queryset:
+
+        # Query
+        queryset = Records.objects.all().filter(user=arg.user).order_by('created_date')
+        for record in list(queryset):
             data.append(record)
 
+        # PDF
         pdf = FPDF('P', 'mm', 'A4')
         pdf.add_page()
-        pdf.set_font('courier', 'B', 16)
-        pdf.cell(40, 10, 'Glucose charts:', 0, 1)
+        pdf.set_font('helvetica', 'B', 16)
+        pdf.cell(40, 10, 'Glucose reports:', 0, 1)
         pdf.cell(40, 10, '', 0, 1)
         pdf.line(10, 30, 200, 30)
-        pdf.set_font('courier', '', 12)
-        pdf.cell(100, 8, f"{'Food name'.ljust(15)}  "
-                         f"{'Blood glucose'.ljust(15)}  "
-                         f"{'Rations'.ljust(15)}  "
-                         f"{'Unities'.ljust(15)}  "
-                         f"{'Phase day'.ljust(15)}  "
-                         f"{'Date'.ljust(20)}", 0, 1)
 
+        # Table
+        line_height = pdf.font_size * 1.5
+        col_width = pdf.epw / 6
+
+        # Headers
+        pdf.set_font('helvetica', 'B', 11)
         pdf.line(10, 38, 200, 38)
-        for line in data:
-            food_name = (str(line.foods.name)[:75] + '...') if len(str(line.foods.name)) > 75 else str(line.foods.name)
+        lista = ['Food name', 'Blood glucose', 'Rations', 'Unities', 'Phase day', 'Date']
+        for item in lista:
+            pdf.multi_cell(col_width, line_height, item, border=0, ln=3)
 
-            pdf.cell(100, 8, f"{str(food_name).ljust(15)} "
-                             f"{str(line.blood_glucose).ljust(15)}  "
-                             f"{str('hc_rations').ljust(15)}  "
-                             f"{'test'.ljust(15)}  "
-                             f"{str(line.phasesDay.name).ljust(15)}  "
-                             f"{str(line.phasesDay.created_at.strftime('%m/%d/%y, %H:%M')).ljust(20)}", 0, 1)
+        # Data
+        pdf.set_font('helvetica', '', 10)
+        pdf.ln(line_height)
+        pdf.line(10, 38, 200, 38)
+
+        for record in data:
+            for food in list(record.foods.all()):
+                foodN = (str(food.name)[:13] + '...') if len(str(food.name)) > 13 else str(food.name)
+                lista = [foodN, str(round(record.blood_glucose)), str(round(food.hc_rations)),
+                         str(round(record.units)),
+                         str(record.phasesDay.name), str(record.created_date.strftime('%m/%d/%Y, %H:%M'))]
+                for item in lista:
+                    pdf.multi_cell(col_width, line_height, item, border=0, ln=3)
+                pdf.ln(line_height)
+
+        # Output
         pdf.output('report.pdf', 'F')
         return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
