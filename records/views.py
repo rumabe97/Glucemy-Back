@@ -44,7 +44,8 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
 
     @action(methods=['get'], detail=False, url_path='(?P<day>[^/.]+)', url_name="record_day")
     def records_day(self, request, day):
-        if not day: return JsonResponse({"error": "Day is required"}, status=400)
+        if not day:
+            return JsonResponse({"error": "Day is required"}, status=400)
         start_date = datetime.datetime.strptime(day, "%Y-%m-%d").date()
         end_date = start_date + timedelta(days=1)
         records = Records.objects.filter(created_date__range=[start_date, end_date], user=request.user)
@@ -73,8 +74,8 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
             'labels': labels,
         })
 
-    @action(methods=["get"], detail=False, url_path='report', url_name="report")
-    def report(self, arg):
+    @action(methods=["post"], detail=False, url_path='report', url_name="report")
+    def post(self, arg):
         data = []
 
         # Query
