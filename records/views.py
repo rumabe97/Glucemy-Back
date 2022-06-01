@@ -72,7 +72,7 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
             'labels': labels,
         })
 
-    @action(methods=["get"], detail=False, url_path='report', url_name="report")
+    @action(methods=["post"], detail=False, url_path='report', url_name="report")
     def report(self, arg):
         data = []
 
