@@ -1,5 +1,5 @@
-from datetime import timedelta, date
-from time import strptime
+import datetime
+from datetime import timedelta
 
 from django.db.models import Sum
 from django.db.models.functions import TruncDay
@@ -42,15 +42,13 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
         'report': (permissions.IsAuthenticated,)
     }
 
-    # @action(methods=['get'], detail=False, url_path='(?P<day>[^/.]+)', url_name="record_day")
-    # def records_day(self, request, day):
-    #     print(day)
-    #     start_date = strptime(day, "%Y/%m/%d")
-    #     print(start_date)
-    #     end_date = start_date + timedelta(days=1)
-    #     records = Records.objects.filter(created_date__range=[start_date, end_date], user=request.user)
-    #     serializer = self.get_serializer(records, many=True)
-    #     return JsonResponse(serializer.data, safe=False)
+    @action(methods=['get'], detail=False, url_path='(?P<day>[^/.]+)', url_name="record_day")
+    def records_day(self, request, day):
+        start_date = datetime.datetime.strptime(day, "%Y-%m-%d").date()
+        end_date = start_date + timedelta(days=1)
+        records = Records.objects.filter(created_date__range=[start_date, end_date], user=request.user)
+        serializer = self.get_serializer(records, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
     @action(methods=["get"], detail=False, url_path='(?P<start_date>[^/.]+)/(?P<end_date>[^/.]+)',
             url_name="charts")
