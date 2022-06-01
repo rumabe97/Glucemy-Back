@@ -1,3 +1,6 @@
+from datetime import timedelta, date
+from time import strptime
+
 from django.db.models import Sum
 from django.db.models.functions import TruncDay
 from django.http import FileResponse, JsonResponse
@@ -9,7 +12,6 @@ from rest_framework.decorators import action
 from records.fullSerializers import UpdateRecordSerializer, CreateRecordSerializer, FullRecordSerializer
 from shared.mixins import DynamicSerializersMixin
 from records.models import Records
-from records.serializers import RecordSerializer
 from shared.permissions import IsOwner
 
 
@@ -22,13 +24,12 @@ from shared.permissions import IsOwner
 )
 class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
     queryset = Records.objects.all()
-    serializer_class = RecordSerializer
+    serializer_class = FullRecordSerializer
 
     serializer_classes_by_action = {
         'update': UpdateRecordSerializer,
         'create': CreateRecordSerializer,
         'partial_update': UpdateRecordSerializer,
-        'get_object': FullRecordSerializer,
     }
 
     permission_classes_by_action = {
@@ -37,7 +38,18 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
         'partial_update': (permissions.IsAdminUser | IsOwner,),
         'destroy': (permissions.IsAdminUser | IsOwner,),
         'charts': (permissions.IsAdminUser | IsOwner,),
+        'records_day': (permissions.IsAdminUser | IsOwner,),
     }
+
+    @action(methods=['get'], detail=False, url_path='(?P<day>[^/.]+)', url_name="record_day")
+    def records_day(self, request, day):
+        print(day)
+        start_date = strptime(day, "%Y/%m/%d")
+        print(start_date)
+        end_date = start_date + timedelta(days=1)
+        records = Records.objects.filter(created_date__range=[start_date, end_date], user=request.user)
+        serializer = self.get_serializer(records, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
     @action(methods=["get"], detail=False, url_path='(?P<start_date>[^/.]+)/(?P<end_date>[^/.]+)',
             url_name="charts")
