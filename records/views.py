@@ -9,7 +9,8 @@ from fpdf import FPDF
 from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 
-from records.fullSerializers import UpdateRecordSerializer, CreateRecordSerializer, FullRecordSerializer
+from records.fullSerializers import UpdateRecordSerializer, CreateRecordSerializer, FullRecordSerializer, \
+    PatchRecordSerializer
 from records.serializers import PDFSerializer
 from shared.mixins import DynamicSerializersMixin, DynamicPermissionsMixin
 from records.models import Records
@@ -30,8 +31,8 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
     serializer_classes_by_action = {
         'update': UpdateRecordSerializer,
         'create': CreateRecordSerializer,
-        'partial_update': UpdateRecordSerializer,
-        'post': PDFSerializer,
+        'partial_update': PatchRecordSerializer,
+        'get_pdf': PDFSerializer,
     }
 
     permission_classes_by_action = {
@@ -41,10 +42,10 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
         'destroy': (permissions.IsAdminUser | IsOwner,),
         'charts': (permissions.IsAdminUser | IsOwner,),
         'records_day': (permissions.IsAdminUser | IsOwner,),
-        'post': (permissions.IsAdminUser | IsOwner,),
+        'get_pdf': (permissions.IsAdminUser | IsOwner,),
     }
 
-    @action(methods=['get'], detail=False, url_path='(?P<day>[^/.]+)', url_name="record_day")
+    @action(methods=['get'], detail=False, url_path='day/(?P<day>[^/.]+)', url_name="record_day")
     def records_day(self, request, day):
         if not day:
             return JsonResponse({"error": "Day is required"}, status=400)
@@ -54,7 +55,7 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
         serializer = self.get_serializer(records, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-    @action(methods=["get"], detail=False, url_path='(?P<start_date>[^/.]+)/(?P<end_date>[^/.]+)',
+    @action(methods=["get"], detail=False, url_path='chart/(?P<start_date>[^/.]+)/(?P<end_date>[^/.]+)',
             url_name="charts")
     def charts(self, arg, start_date, end_date):
         labels = []
@@ -77,7 +78,7 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
         })
 
     @action(methods=["post"], detail=False, url_path='report', url_name="report")
-    def post(self, arg):
+    def get_pdf(self, arg):
         data = []
 
         # Query

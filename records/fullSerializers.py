@@ -99,3 +99,21 @@ class CreateRecordSerializer(serializers.ModelSerializer):
 
         instance.foods.set(foods)
         return instance
+
+
+class PatchRecordSerializer(serializers.ModelSerializer):
+    idUser = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
+    idFoods = serializers.PrimaryKeyRelatedField(queryset=Foods.objects.all(), many=True, write_only=True)
+    idPhaseDay = serializers.PrimaryKeyRelatedField(queryset=PhasesDay.objects.all(), write_only=True)
+
+    class Meta:
+        model = Records
+        fields = ('blood_glucose',
+                  'carbohydrates',
+                  'annotations',
+                  'hc_rations',
+                  'bolus',
+                  'idUser',
+                  'idFoods',
+                  'idPhaseDay',
+                  'created_date')
