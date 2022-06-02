@@ -3,7 +3,7 @@ from rest_framework import viewsets, permissions
 
 from phasesDay.models import PhasesDay
 from phasesDay.serializers import PhasesDaySerializer, UpdatePhasesDaySerializer, CreatePhasesDaySerializer
-from shared.mixins import DynamicSerializersMixin
+from shared.mixins import DynamicSerializersMixin, DynamicPermissionsMixin
 from shared.permissions import IsOwner
 
 
@@ -14,7 +14,7 @@ from shared.permissions import IsOwner
     destroy=extend_schema(description='Delete a phase day.'),
     create=extend_schema(description='Create a phase day food.'),
 )
-class PhasesDayViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
+class PhasesDayViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.ModelViewSet):
     queryset = PhasesDay.objects.all()
     serializer_class = PhasesDaySerializer
 

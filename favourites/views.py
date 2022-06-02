@@ -3,7 +3,7 @@ from rest_framework import viewsets, permissions
 
 from favourites.models import Favourites
 from favourites.serializers import FavouritesSerializer, UpdateFavouriteSerializer, CreateFavouriteSerializer
-from shared.mixins import DynamicSerializersMixin
+from shared.mixins import DynamicSerializersMixin, DynamicPermissionsMixin
 from shared.permissions import IsOwner
 
 
@@ -14,7 +14,7 @@ from shared.permissions import IsOwner
     destroy=extend_schema(description='Delete a favourite.'),
     create=extend_schema(description='Create a new favourite.'),
 )
-class FavouritesViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
+class FavouritesViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.ModelViewSet):
     queryset = Favourites.objects.all()
     serializer_class = FavouritesSerializer
 

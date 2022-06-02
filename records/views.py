@@ -11,7 +11,7 @@ from rest_framework.decorators import action
 
 from records.fullSerializers import UpdateRecordSerializer, CreateRecordSerializer, FullRecordSerializer
 from records.serializers import PDFSerializer
-from shared.mixins import DynamicSerializersMixin
+from shared.mixins import DynamicSerializersMixin, DynamicPermissionsMixin
 from records.models import Records
 from shared.permissions import IsOwner
 
@@ -23,7 +23,7 @@ from shared.permissions import IsOwner
     destroy=extend_schema(description='Delete a record.'),
     create=extend_schema(description='Create a new record.'),
 )
-class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
+class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.ModelViewSet):
     queryset = Records.objects.all()
     serializer_class = FullRecordSerializer
 
@@ -41,7 +41,7 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
         'destroy': (permissions.IsAdminUser | IsOwner,),
         'charts': (permissions.IsAdminUser | IsOwner,),
         'records_day': (permissions.IsAdminUser | IsOwner,),
-        'report': (permissions.IsAuthenticated,),
+        'post': (permissions.IsAdminUser | IsOwner,),
     }
 
     @action(methods=['get'], detail=False, url_path='(?P<day>[^/.]+)', url_name="record_day")
