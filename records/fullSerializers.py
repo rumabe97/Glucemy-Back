@@ -37,7 +37,7 @@ class UpdateRecordSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Records
-        fields = ('id',
+        fields = (
                   'blood_glucose',
                   'carbohydrates',
                   'annotations',
@@ -55,13 +55,13 @@ class UpdateRecordSerializer(serializers.ModelSerializer):
         phases_day = validated_data.pop('idPhaseDay')
         user = instance.user
 
-        instance = Records.objects.create(
+        instance.foods.set(foods)
+        Records.objects.update(
             phasesDay=phases_day,
             user=user,
             **validated_data)
 
-        instance.foods.set(foods)
-        return instance
+        return Records.objects.get(id=instance.id)
 
 
 class CreateRecordSerializer(serializers.ModelSerializer):
