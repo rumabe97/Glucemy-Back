@@ -1,5 +1,5 @@
 from drf_spectacular.utils import extend_schema_view, extend_schema
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, filters
 
 from phasesDay.models import PhasesDay
 from phasesDay.serializers import PhasesDaySerializer, UpdatePhasesDaySerializer, CreatePhasesDaySerializer
@@ -17,6 +17,8 @@ from shared.permissions import IsOwner
 class PhasesDayViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.ModelViewSet):
     queryset = PhasesDay.objects.all()
     serializer_class = PhasesDaySerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['name']
 
     serializer_classes_by_action = {
         'update': UpdatePhasesDaySerializer,
