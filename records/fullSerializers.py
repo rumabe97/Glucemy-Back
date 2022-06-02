@@ -56,10 +56,13 @@ class UpdateRecordSerializer(serializers.ModelSerializer):
         user = instance.user
 
         instance.foods.set(foods)
-        Records.objects.update(
-            phasesDay=phases_day,
-            user=user,
-            **validated_data)
+        instance.blood_glucose = validated_data.get('blood_glucose', instance.blood_glucose)
+        instance.carbohydrates = validated_data.get('carbohydrates', instance.carbohydrates)
+        instance.annotations = validated_data.get('annotations', instance.annotations)
+        instance.hc_rations = validated_data.get('hc_rations', instance.hc_rations)
+        instance.bolus = validated_data.get('bolus', instance.bolus)
+        instance.phasesDay = phases_day
+        instance.save()
 
         return Records.objects.get(id=instance.id)
 
