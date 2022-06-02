@@ -65,7 +65,6 @@ class UpdateRecordSerializer(serializers.ModelSerializer):
 
 
 class CreateRecordSerializer(serializers.ModelSerializer):
-    idUser = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), write_only=True)
     idFoods = serializers.PrimaryKeyRelatedField(queryset=Foods.objects.all(), many=True, write_only=True)
     idPhaseDay = serializers.PrimaryKeyRelatedField(queryset=PhasesDay.objects.all(), write_only=True)
     user = UserSerializer(read_only=True)
@@ -79,7 +78,6 @@ class CreateRecordSerializer(serializers.ModelSerializer):
                   'annotations',
                   'hc_rations',
                   'bolus',
-                  'idUser',
                   'idFoods',
                   'idPhaseDay',
                   'foods',
@@ -88,11 +86,10 @@ class CreateRecordSerializer(serializers.ModelSerializer):
                   'created_date')
 
     def create(self, validated_data):
-        user = validated_data.pop('idUser')
         foods = validated_data.pop('idFoods')
         phases_day = validated_data.pop('idPhaseDay')
 
-        current_user = user if user is not None else self.context.get('request').user
+        current_user = self.context.get('request').user
 
         instance = Records.objects.create(
             user=current_user,
