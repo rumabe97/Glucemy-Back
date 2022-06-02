@@ -53,9 +53,11 @@ class UpdateRecordSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         foods = validated_data.pop('idFoods')
         phases_day = validated_data.pop('idPhaseDay')
+        user = instance.user
 
         instance = Records.objects.create(
             phasesDay=phases_day,
+            user=user,
             **validated_data)
 
         instance.foods.set(foods)

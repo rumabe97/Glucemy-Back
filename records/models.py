@@ -21,7 +21,7 @@ class Records(models.Model):
         User,
         on_delete=CASCADE,
         related_name='records',
-        related_query_name='record'
+        related_query_name='record',
     )
 
     class Meta:
