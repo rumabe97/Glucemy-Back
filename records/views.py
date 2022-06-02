@@ -10,6 +10,7 @@ from rest_framework import viewsets, permissions
 from rest_framework.decorators import action
 
 from records.fullSerializers import UpdateRecordSerializer, CreateRecordSerializer, FullRecordSerializer
+from records.serializers import PDFSerializer
 from shared.mixins import DynamicSerializersMixin
 from records.models import Records
 from shared.permissions import IsOwner
@@ -30,6 +31,7 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
         'update': UpdateRecordSerializer,
         'create': CreateRecordSerializer,
         'partial_update': UpdateRecordSerializer,
+        'post': PDFSerializer,
     }
 
     permission_classes_by_action = {
@@ -39,7 +41,7 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
         'destroy': (permissions.IsAdminUser | IsOwner,),
         'charts': (permissions.IsAdminUser | IsOwner,),
         'records_day': (permissions.IsAdminUser | IsOwner,),
-        'report': (permissions.IsAuthenticated,)
+        'report': (permissions.IsAuthenticated,),
     }
 
     @action(methods=['get'], detail=False, url_path='(?P<day>[^/.]+)', url_name="record_day")
@@ -80,6 +82,9 @@ class RecordViewSet(DynamicSerializersMixin, viewsets.ModelViewSet):
 
         # Query
         queryset = Records.objects.all().filter(user=arg.user).order_by('created_date')
+
+        if arg.data['start_date'] and arg.data['end_date']:
+            queryset = queryset.filter(created_date__range=[arg.data['start_date'], arg.data['end_date']])
         for record in list(queryset):
             data.append(record)
 
