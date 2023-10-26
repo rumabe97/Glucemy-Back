@@ -4,12 +4,6 @@
         "use": "@vercel/python",
         "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
     }],
-    "build": {
-        "scripts": {
-            "postBuild": "python manage.py migrate",
-            "postBuild": "python manage.py loaddata foods/fixtures/foods.json"
-        }
-    },
     "routes": [
         {
             "src": "/(.*)",
