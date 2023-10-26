@@ -1,7 +1,0 @@
-#!/bin/sh
-
-# Ejecutar migraciones
-python manage.py migrate
-
-# Cargar datos
-python manage.py loaddata foods/fixtures/foods.json
