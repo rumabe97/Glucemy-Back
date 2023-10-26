@@ -6,8 +6,8 @@
     }],
     "routes": [
         {
-            "dest": "vercel/django.py",
-            "src": "/(.*)"
+            "src": "/(.*)",
+            "dest": "config/wsgi.py"
         }
     ]
 }
