@@ -8,7 +8,7 @@
     },
     {
       "src": "release.sh",
-      "use": "@vercel/node"
+      "use": "@vercel/static-build"
     }
   ],
   "routes": [
