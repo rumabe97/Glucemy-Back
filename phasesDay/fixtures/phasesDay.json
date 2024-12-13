@@ -1,0 +1,50 @@
+[
+  {
+    "pk": 1,
+    "model": "phasesDay.phasesDay",
+    "fields": {
+      "name": "Breakfast",
+      "description": "The first meal of the day, typically consumed in the morning after waking up. It provides the body with energy to start the day."
+    }
+  },
+  {
+    "pk": 2,
+    "model": "phasesDay.phasesDay",
+    "fields": {
+    "name": "Mid-Morning Snack",
+    "description": "A light snack consumed between breakfast and lunch, often to curb hunger and maintain energy levels."
+    }
+  },
+  {
+    "pk": 3,
+    "model": "phasesDay.phasesDay",
+    "fields": {
+      "name": "Lunch",
+      "description": "The main meal of the day, usually eaten in the middle of the day. It provides a significant portion of the daily caloric intake."
+    }
+  },
+  {
+    "pk": 4,
+    "model": "phasesDay.phasesDay",
+    "fields": {
+      "name": "Afternoon Snack",
+      "description": "A light snack consumed between lunch and dinner, often to prevent overeating at dinner and maintain energy."
+    }
+  },
+  {
+    "pk": 5,
+    "model": "phasesDay.phasesDay",
+    "fields": {
+      "name": "Dinner",
+      "description": "The evening meal, typically consumed in the late afternoon or evening. It is often lighter than lunch but still provides essential nutrients."
+    }
+  },
+  {
+    "pk": 6,
+    "model": "phasesDay.phasesDay",
+    "fields": {
+      "name": "Late-Night Snack",
+      "description": "A small snack consumed before bedtime, often to satisfy hunger or cravings before sleep."
+    }
+  }
+]
