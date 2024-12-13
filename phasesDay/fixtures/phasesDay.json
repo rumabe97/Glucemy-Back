@@ -1,50 +1,62 @@
 [
   {
-    "pk": 1,
-    "model": "phasesDay.phasesDay",
-    "fields": {
-      "name": "Breakfast",
-      "description": "The first meal of the day, typically consumed in the morning after waking up. It provides the body with energy to start the day."
-    }
-  },
-  {
     "pk": 2,
     "model": "phasesDay.phasesDay",
     "fields": {
-    "name": "Mid-Morning Snack",
-    "description": "A light snack consumed between breakfast and lunch, often to curb hunger and maintain energy levels."
+      "name": "Breakfast",
+      "description": "The first meal of the day, typically consumed in the morning after waking up. It provides the body with energy to start the day.",
+      "created_at": "2024-12-13T17:55:38",
+      "updated_at": "2024-12-13T17:55:38"
     }
   },
   {
     "pk": 3,
     "model": "phasesDay.phasesDay",
     "fields": {
-      "name": "Lunch",
-      "description": "The main meal of the day, usually eaten in the middle of the day. It provides a significant portion of the daily caloric intake."
+    "name": "Mid-Morning Snack",
+    "description": "A light snack consumed between breakfast and lunch, often to curb hunger and maintain energy levels.",
+      "created_at": "2024-12-13T17:55:38",
+      "updated_at": "2024-12-13T17:55:38"
     }
   },
   {
     "pk": 4,
     "model": "phasesDay.phasesDay",
     "fields": {
-      "name": "Afternoon Snack",
-      "description": "A light snack consumed between lunch and dinner, often to prevent overeating at dinner and maintain energy."
+      "name": "Lunch",
+      "description": "The main meal of the day, usually eaten in the middle of the day. It provides a significant portion of the daily caloric intake.",
+      "created_at": "2024-12-13T17:55:38",
+      "updated_at": "2024-12-13T17:55:38"
     }
   },
   {
     "pk": 5,
     "model": "phasesDay.phasesDay",
     "fields": {
-      "name": "Dinner",
-      "description": "The evening meal, typically consumed in the late afternoon or evening. It is often lighter than lunch but still provides essential nutrients."
+      "name": "Afternoon Snack",
+      "description": "A light snack consumed between lunch and dinner, often to prevent overeating at dinner and maintain energy.",
+      "created_at": "2024-12-13T17:55:38",
+      "updated_at": "2024-12-13T17:55:38"
     }
   },
   {
     "pk": 6,
     "model": "phasesDay.phasesDay",
     "fields": {
+      "name": "Dinner",
+      "description": "The evening meal, typically consumed in the late afternoon or evening. It is often lighter than lunch but still provides essential nutrients.",
+      "created_at": "2024-12-13T17:55:38",
+      "updated_at": "2024-12-13T17:55:38"
+    }
+  },
+  {
+    "pk": 7,
+    "model": "phasesDay.phasesDay",
+    "fields": {
       "name": "Late-Night Snack",
-      "description": "A small snack consumed before bedtime, often to satisfy hunger or cravings before sleep."
+      "description": "A small snack consumed before bedtime, often to satisfy hunger or cravings before sleep.",
+      "created_at": "2024-12-13T17:55:38",
+      "updated_at": "2024-12-13T17:55:38"
     }
   }
 ]
