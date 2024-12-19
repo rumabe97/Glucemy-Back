@@ -5,6 +5,6 @@ class FoodsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'foods'
 
-    # def ready(self):
+    def ready(self):
         # call_command('loaddata', 'foods.json', verbosity=0)
-        # call_command('migrate')
+        call_command('migrate')
