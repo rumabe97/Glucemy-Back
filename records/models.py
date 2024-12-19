@@ -17,7 +17,7 @@ class Records(models.Model):
     hc_rations = models.FloatField(default=0)
     bolus = models.FloatField(default=0)
     units = models.FloatField(default=0)
-    created_date = models.DateTimeField(auto_now_add=True)
+    created_date = models.DateTimeField(null=True, blank=True)
     foods = models.ManyToManyField(Foods, related_name="records", related_query_name='record')
     phasesDay = models.ForeignKey(PhasesDay, on_delete=CASCADE, related_name="records", related_query_name='record',
                                   null=False, blank=False)
@@ -30,3 +30,8 @@ class Records(models.Model):
 
     class Meta:
         ordering = ['-id']
+
+    def save(self, *args, **kwargs):
+        if not self.created_date:
+            self.created_date = now()
+        super().save(*args, **kwargs)
