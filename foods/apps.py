@@ -7,4 +7,4 @@ class FoodsConfig(AppConfig):
 
     def ready(self):
         call_command('loaddata', 'foods.json', verbosity=0)
-        # call_command('migrate')
+        call_command('migrate')
