@@ -13,7 +13,7 @@ class Records(models.Model):
         models.FloatField(),
         default=list,
     )
-    annotations = models.TextField(default="", max_length=255)
+    annotations = models.TextField(default="", max_length=1000)
     hc_rations = models.FloatField(default=0)
     bolus = models.FloatField(default=0)
     units = models.FloatField(default=0)
