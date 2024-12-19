@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from django.db.models.deletion import CASCADE
 
 from foods.models import Foods
@@ -8,7 +9,10 @@ from users.models import User
 
 class Records(models.Model):
     blood_glucose = models.FloatField(default=0)
-    carbohydrates = models.FloatField(default=0)
+    carbohydrates = ArrayField(
+        models.FloatField(),
+        default=list,
+    )
     annotations = models.TextField(default="", max_length=255)
     hc_rations = models.FloatField(default=0)
     bolus = models.FloatField(default=0)
