@@ -18,6 +18,7 @@ class Records(models.Model):
     bolus = models.FloatField(default=0)
     units = models.FloatField(default=0)
     created_date = models.DateTimeField(null=True, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
     foods = models.ManyToManyField(Foods, related_name="records", related_query_name='record')
     phasesDay = models.ForeignKey(PhasesDay, on_delete=CASCADE, related_name="records", related_query_name='record',
                                   null=False, blank=False)
