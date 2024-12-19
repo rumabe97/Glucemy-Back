@@ -477,7 +477,7 @@
     }
   },
   {
-    "pk": 52,
+    "pk": 88,
     "model": "foods.foods",
     "fields": {
       "name": "Yogur entero, sabores o fruta",
