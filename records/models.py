@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from django.db.models.deletion import CASCADE
+from django.utils.timezone import now
 
 from foods.models import Foods
 from phasesDay.models import PhasesDay
