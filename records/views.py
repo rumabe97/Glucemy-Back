@@ -1,7 +1,7 @@
 import datetime
 from datetime import timedelta
 
-from django.db.models import Subquery, OuterRef, Sum
+from django.db.models import Func, F, Sum, Value
 from django.db.models.functions import TruncDay
 from django.http import FileResponse, JsonResponse
 from drf_spectacular.utils import extend_schema_view, extend_schema
@@ -62,15 +62,9 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
         blood_glucose_data = []
         carbohydrates_data = []
 
-        carbohydrates_sum_subquery = Records.objects.filter(
-            id=OuterRef('id')
-        ).annotate(
-            sum_carbohydrates=Sum('carbohydrates')
-        ).values('sum_carbohydrates')[:1]
-
         queryset = Records.objects.annotate(
             day=TruncDay('created_date'),
-            totalCarbohydrates = Subquery(carbohydrates_sum_subquery)
+            totalCarbohydrates=ArraySum(F('carbohydrates'))
         ).values('day').annotate(
             totalBlood=Sum('blood_glucose'),
         ).order_by('day').filter(
@@ -138,3 +132,8 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
         # Output
         pdf.output('report.pdf', 'F')
         return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+
+
+class ArraySum(Func):
+    function = 'SUM'
+    template = 'SUM(unnest(%(expressions)s))'
