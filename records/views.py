@@ -69,16 +69,13 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
                 Records.objects.filter(id=OuterRef('id'))
                 .values('id')
                 .annotate(
-                    total_carbohydrates=RawSQL(
-                        """
-                        SELECT SUM(value) AS total_carbohydrates
-                        FROM (
-                            SELECT unnest(carbohydrates) AS value
-                            FROM records_records
-                            WHERE id = %s
-                        ) subquery
-                        """,
-                        [OuterRef('id')]
+                    total_carbohydrates=Sum(
+                        RawSQL(
+                            """
+                            SELECT SUM(value) AS total_carbohydrates
+                            FROM unnest(carbohydrates) AS value
+                            """
+                        )
                     )
                 ).values('total_carbohydrates')[:1]
             ),
