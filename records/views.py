@@ -1,7 +1,8 @@
 import datetime
 from datetime import timedelta
 
-from django.db.models import F, Sum, Subquery, OuterRef, RawSQL
+from django.db.models import F, Sum, Subquery, OuterRef
+from django.db.models.expressions import RawSQL
 from django.db.models.functions import TruncDay
 from django.http import FileResponse, JsonResponse
 from drf_spectacular.utils import extend_schema_view, extend_schema
