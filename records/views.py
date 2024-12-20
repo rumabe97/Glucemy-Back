@@ -1,7 +1,7 @@
 import datetime
 from datetime import timedelta
 
-from django.db.models import Sum
+from django.db.models import Sum, F, Func, Value
 from django.db.models.functions import TruncDay
 from django.http import FileResponse, JsonResponse
 from drf_spectacular.utils import extend_schema_view, extend_schema
@@ -15,6 +15,7 @@ from records.serializers import PDFSerializer
 from shared.mixins import DynamicSerializersMixin, DynamicPermissionsMixin
 from records.models import Records
 from shared.permissions import IsOwner
+from django.db.models.expressions import RawSQL
 
 
 @extend_schema_view(
@@ -70,7 +71,7 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
 
         for record in queryset:
             labels.append(record['day'].strftime("%d/%m/%Y"))
-        blood_glucose_data.append(record['totalBlood']), \
+            blood_glucose_data.append(record['totalBlood'])
             carbohydrates_data.append(record['totalCarbohydrates'])
 
         return JsonResponse(data={
