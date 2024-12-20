@@ -8,6 +8,7 @@ class User(AbstractUser):
     weight = models.FloatField(default=0)
     height = models.FloatField(default=0)
     age = models.IntegerField(default=0)
+    profile_image = models.TextField(null=True, blank=True)
 
     class Meta:
         ordering = ['-id']

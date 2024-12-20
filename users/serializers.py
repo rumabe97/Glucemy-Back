@@ -26,4 +26,5 @@ class UpdateUserSerializer(serializers.ModelSerializer):
                   'email',
                   'weight',
                   'height',
-                  'age',)
+                  'age',
+                  'profile_image')

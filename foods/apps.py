@@ -8,9 +8,9 @@ class FoodsConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'foods'
 
-    # def ready(self):
-    #     # self.load_food()
-    #     call_command('migrate')
+    def ready(self):
+        # self.load_food()
+        call_command('migrate')
 
     def load_food(self):
         base_dir = os.path.dirname(os.path.abspath(__file__))
