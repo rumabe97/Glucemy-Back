@@ -81,7 +81,7 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
         for record in queryset:
             labels.append(record['day'].strftime("%d/%m/%Y"))
             blood_glucose_data.append(record['totalBlood'])
-            carbohydrates_data.append(record['totalCarbohydrates'])
+            carbohydrates_data.append(record)
 
         return JsonResponse(data={
             'blood_glucose_data': blood_glucose_data,
