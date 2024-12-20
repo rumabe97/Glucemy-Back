@@ -63,11 +63,22 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
         blood_glucose_data = []
         carbohydrates_data = []
 
-        queryset = Records.objects.annotate(day=TruncDay('created_date')).values('day').annotate(
-            totalBlood=Sum('blood_glucose'), totalCarbohydrates=RawSQL(
-                "SELECT SUM(unnest(carbohydrates)) FROM records_records WHERE id = %s",
-                params=[f"Records.id"])).order_by('day').filter(
-            created_date__range=[start_date, end_date], user=arg.user)
+        queryset = Records.objects.annotate(
+            day=TruncDay('created_date')
+        ).values('day').annotate(
+            totalBlood=Sum('blood_glucose'),
+            totalCarbohydrates=RawSQL(
+                """
+                SELECT SUM(value) 
+                FROM unnest(carbohydrates) AS value 
+                WHERE id = %s
+                """,
+                [F('id')]  # Reemplaza el id dinámicamente
+            )
+        ).order_by('day').filter(
+            created_date__range=[start_date, end_date],
+            user=arg.user
+        )
 
         for record in queryset:
             labels.append(record['day'].strftime("%d/%m/%Y"))
