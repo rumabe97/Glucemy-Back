@@ -63,26 +63,16 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
         blood_glucose_data = []
         carbohydrates_data = []
 
-        carbohydrates_subquery = RawSQL(
-            """
-            SELECT SUM(value) AS total_carbohydrates
-            FROM (
-                SELECT unnest(carbohydrates) AS value
-                FROM records_records
-                WHERE id = %s
-            ) subquery
-            """,
-            [OuterRef('id')]
-        )
-
         queryset = Records.objects.annotate(
             day=TruncDay('created_date'),
             totalCarbohydrates=Subquery(
-                Records.objects.filter(id=OuterRef('id')).annotate(
-                    totalCarbohydrates=carbohydrates_subquery
-                ).values('totalCarbohydrates')[:1]
+                Records.objects.filter(id=OuterRef('id'))
+                .values('id')
+                .annotate(
+                    total_carbohydrates=Sum(F('carbohydrates'))
+                ).values('total_carbohydrates')[:1]
             ),
-            totalBlood=Sum('blood_glucose'),
+            totalBlood=Sum('blood_glucose')
         ).filter(
             created_date__range=[start_date, end_date],
             user=arg.user
