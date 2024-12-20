@@ -73,7 +73,7 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
             totalCarbohydrates = Subquery(carbohydrates_sum_subquery)
         ).values('day').annotate(
             totalBlood=Sum('blood_glucose'),
-            test=tottotalCarbohydrates
+            test=totalCarbohydrates
         ).order_by('day').filter(
             created_date__range=[start_date, end_date],
             user=arg.user
