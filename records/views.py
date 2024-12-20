@@ -73,7 +73,6 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
             totalCarbohydrates = Subquery(carbohydrates_sum_subquery)
         ).values('day').annotate(
             totalBlood=Sum('blood_glucose'),
-            test=totalCarbohydrates
         ).order_by('day').filter(
             created_date__range=[start_date, end_date],
             user=arg.user
@@ -82,7 +81,7 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
         for record in queryset:
             labels.append(record['day'].strftime("%d/%m/%Y"))
             blood_glucose_data.append(record['totalBlood'])
-            carbohydrates_data.append(record['test'])
+            carbohydrates_data.append(record['totalCarbohydrates'])
 
         return JsonResponse(data={
             'blood_glucose_data': blood_glucose_data,
