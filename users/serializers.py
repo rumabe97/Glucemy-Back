@@ -14,7 +14,6 @@ class UserSerializer(serializers.ModelSerializer):
                   'weight',
                   'height',
                   'age',
-                  'profile_image',
                   'created_date',)
 
 

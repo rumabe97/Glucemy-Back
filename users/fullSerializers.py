@@ -19,6 +19,7 @@ class FullUserSerializer(serializers.ModelSerializer):
                   'age',
                   'first_name',
                   'last_name',
+                  'profile_image',
                   'created_date',
                   'records',
                   'favourites')
