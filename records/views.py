@@ -81,13 +81,12 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
                 Records.objects.filter(id=OuterRef('id')).annotate(
                     totalCarbohydrates=carbohydrates_subquery
                 ).values('totalCarbohydrates')[:1]
-            )
-        ).values('day').annotate(
+            ),
             totalBlood=Sum('blood_glucose'),
-        ).order_by('day').filter(
+        ).filter(
             created_date__range=[start_date, end_date],
             user=arg.user
-        )
+        ).order_by('day')
 
         for record in queryset:
             labels.append(record['day'].strftime("%d/%m/%Y"))
