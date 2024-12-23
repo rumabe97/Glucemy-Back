@@ -1,5 +1,6 @@
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
+from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
 from shared.mixins import DynamicSerializersMixin, DynamicPermissionsMixin
@@ -33,11 +34,11 @@ class UserViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.Mod
         'destroy': (permissions.IsAdminUser | IsOwner,),
     }
 
-    # @action(methods=["get"], detail=False, url_path='(?P<username>[^/.]+)', url_name="user")
-    # def get_user_by_username(self, request, username):
-    #     user = get_object_or_404(User, username=username)
-    #     serializer = self.get_serializer(user)
-    #     return Response(serializer.data)
+    @action(methods=["get"], detail=False, url_path='get/(?P<username>[^/.]+)', url_name="user")
+    def get_user_by_username(self, request, username):
+        user = get_object_or_404(User, username=username)
+        serializer = self.get_serializer(user)
+        return Response(serializer.data)
 
     @action(methods=["get"], detail=False, url_path='me', url_name="me")
     def get_current_user(self, request):
