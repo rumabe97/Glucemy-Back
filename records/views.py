@@ -1,9 +1,7 @@
 import datetime
 from datetime import timedelta
 
-from django.db.models import F, Sum, Subquery, OuterRef
-from django.db.models.expressions import RawSQL
-from django.db.models.functions import TruncDay
+from django.db.models import Sum
 from django.http import FileResponse, JsonResponse
 from drf_spectacular.utils import extend_schema_view, extend_schema
 from fpdf import FPDF
@@ -115,36 +113,41 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
         pdf = FPDF('P', 'mm', 'A4')
         pdf.add_page()
         pdf.set_font('helvetica', 'B', 16)
-        pdf.cell(40, 10, 'Glucose reports:', 0, 1)
-        pdf.cell(40, 10, '', 0, 1)
+        pdf.cell(0, 10, 'Glucose reports:', 0, 1, 'C')
+        pdf.cell(0, 10, '', 0, 1)  # Espacio extra
         pdf.line(10, 30, 200, 30)
 
-        # Table
+        # Table Header
         line_height = pdf.font_size * 1.5
-        col_width = pdf.epw / 6
-
-        # Headers
+        effective_page_width = pdf.w - pdf.l_margin - pdf.r_margin
+        col_width = effective_page_width / 6
         pdf.set_font('helvetica', 'B', 11)
-        pdf.line(10, 38, 200, 38)
-        lista = ['Food name', 'Blood glucose', 'Rations', 'Unities', 'Phase day', 'Date']
-        for item in lista:
-            pdf.multi_cell(col_width, line_height, item, border=0, ln=3)
+
+        # Dibujamos los encabezados de la tabla
+        headers = ['Food name', 'Blood glucose', 'Rations', 'Unities', 'Phase day', 'Date']
+        for header in headers:
+            pdf.cell(col_width, line_height, header, border=1, align='C')
+        pdf.ln(line_height)  # Salto de línea después de los encabezados
 
         # Data
         pdf.set_font('helvetica', '', 10)
-        pdf.ln(line_height)
-        pdf.line(10, 38, 200, 38)
-
         for record in data:
             for food in list(record.foods.all()):
                 foodN = (str(food.name)[:13] + '...') if len(str(food.name)) > 13 else str(food.name)
-                lista = [foodN, str(round(record.blood_glucose)), str(round(food.hc_rations)),
-                         str(round(record.units)),
-                         str(record.phasesDay.name), str(record.created_date.strftime('%m/%d/%Y, %H:%M'))]
+                lista = [
+                    foodN,
+                    str(round(record.blood_glucose)),
+                    str(round(food.hc_rations)),
+                    str(round(record.units)),
+                    str(record.phasesDay.name),
+                    str(record.created_date.strftime('%m/%d/%Y, %H:%M'))
+                ]
+                # Dibujar cada fila de la tabla
                 for item in lista:
-                    pdf.multi_cell(col_width, line_height, item, border=0, ln=3)
-                pdf.ln(line_height)
+                    pdf.cell(col_width, line_height, item, border=1, align='C')  # Alineación centrada
+                pdf.ln(line_height)  # Salto de línea después de cada fila
 
         # Output
         pdf.output('report.pdf', 'F')
         return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
+
