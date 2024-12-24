@@ -1,8 +1,10 @@
+from django.utils.timezone import now
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
+from records.models import Records
 from shared.mixins import DynamicSerializersMixin, DynamicPermissionsMixin
 from shared.permissions import IsOwner
 from .fullSerializers import FullUserSerializer
@@ -44,3 +46,23 @@ class UserViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.Mod
     def get_current_user(self, request):
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
+
+    @action(methods=["get"], detail=False, url_path='get_data/glucose', url_name="me")
+    def get_last_glucose(self, request):
+        latest_record = Records.objects.filter(user=request.user).order_by('-created_date').first()
+        if latest_record:
+            time_difference = now() - latest_record.created_date
+            response = {
+                "blood_glucose": latest_record.blood_glucose,
+                "created_date": latest_record.created_date,
+                "time_since_creation": {
+                    "days": time_difference.days,
+                    "hours": time_difference.seconds // 3600,
+                    "minutes": (time_difference.seconds // 60) % 60
+                }
+            }
+        else:
+            response = {
+                "error": "No records found"
+            }
+        return Response(response)
