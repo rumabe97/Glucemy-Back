@@ -47,7 +47,7 @@ class UserViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.Mod
         serializer = self.get_serializer(request.user)
         return Response(serializer.data)
 
-    @action(methods=["get"], detail=False, url_path='get_data/glucose', url_name="me")
+    @action(methods=["get"], detail=False, url_path='get_data/glucose', url_name="get_data/glucose")
     def get_last_glucose(self, request):
         latest_record = Records.objects.filter(user=request.user).order_by('-created_date').first()
         if latest_record:

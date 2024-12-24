@@ -44,6 +44,15 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
         'get_pdf': (permissions.IsAdminUser | IsOwner,),
     }
 
+    @action(methods=['post'], detail=False, url_path='quick/glucose', url_name="quick_glucose")
+    def quick_glucose(self, arg):
+        glucose = arg.data['glucose']
+        if not glucose:
+            return JsonResponse({"error": "Glucose is required"}, status=400)
+        record = Records.objects.create(blood_glucose=glucose, user=arg.user)
+        serializer = self.get_serializer(record, many=False)
+        return JsonResponse(serializer.data, safe=False)
+
     @action(methods=['get'], detail=False, url_path='day/(?P<day>[^/.]+)', url_name="record_day")
     def records_day(self, request, day):
         if not day:
@@ -81,15 +90,15 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
         aux = []
         for t in total_carbohydrates:
             aux2 = {
-                "date":t.created_date,
-                "total":t.total_carbohydrates
+                "date": t.created_date,
+                "total": t.total_carbohydrates
             }
             aux.append(aux2)
         for record in queryset:
             labels.append(record['created_date']),
             blood_glucose_data.append(record['totalBlood']),
             carbohydratesValue = [item for item in aux if item['date'] == record['created_date']]
-            carbohydrates_data.append(carbohydratesValue[0].get('total'))
+            carbohydrates_data.append(carbohydratesValue[0].get('total') if len(carbohydratesValue) > 0 else 0)
 
         return JsonResponse(data={
             'blood_glucose_data': blood_glucose_data,
@@ -150,4 +159,3 @@ class RecordViewSet(DynamicSerializersMixin, DynamicPermissionsMixin, viewsets.M
         # Output
         pdf.output('report.pdf', 'F')
         return FileResponse(open('report.pdf', 'rb'), as_attachment=True, content_type='application/pdf')
-
